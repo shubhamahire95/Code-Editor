@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Code Editor</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f3f4f6;
+        }
+
+        /* Navbar */
+        nav {
+            width: 100%;
+            background-color: #343a40;
+            color: #fff;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        /* Main Layout */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Code Editor Section */
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .editor {
+            height: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Button */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        /* Live Preview */
+        .preview-container {
+            height: 500px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            overflow: auto;
+            border-radius: 8px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: #343a40;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .editor {
+                height: 150px;
+            }
+
+            .preview-container {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            nav {
+                font-size: 20px;
+                padding: 10px;
+            }
+
+            .editor {
+                height: 120px;
+            }
+
+            .preview-container {
+                height: 300px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+
+    <!-- Monaco Editor Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js"></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav> Code Editor</nav>
+    
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Code Editor Section -->
+        <div class="editor-section">
+            <div id="html-editor" class="editor"></div>
+            <div id="css-editor" class="editor"></div>
+            <div id="js-editor" class="editor"></div>
+        </div>
+
+        <!-- Button -->
+        <div class="btn-container">
+            <button onclick="updatePreview()">Show Live Preview</button>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="preview-container">
+            <iframe id="live-preview" title="Live Preview"></iframe>
+        </div>
+    </div>
+
+    <button onclick="saveCode()">Save Code</button>
+
+    <!-- Footer -->
+    <footer>Code Editor</footer>
+
+    <script>
+        // Load Monaco Editor
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs' }});
+        require(['vs/editor/editor.main'], function() {
+            window.htmlEditor = monaco.editor.create(document.getElementById('html-editor'), {
+                value: "<!-- Write HTML code here -->",
+                language: 'html',
+                theme: 'vs-dark'
+            });
+
+            window.cssEditor = monaco.editor.create(document.getElementById('css-editor'), {
+                value: "/* Write CSS code here */",
+                language: 'css',
+                theme: 'vs-dark'
+            });
+
+            window.jsEditor = monaco.editor.create(document.getElementById('js-editor'), {
+                value: "// Write JavaScript code here",
+                language: 'javascript',
+                theme: 'vs-dark'
+            });
+        });
+
+        function updatePreview() {
+            const html = window.htmlEditor.getValue();
+            const css = "<style>" + window.cssEditor.getValue() + "</style>";
+            const js = "<script>" + window.jsEditor.getValue() + "</" + "script>";
+
+            const previewFrame = document.getElementById("live-preview").contentDocument || document.getElementById("live-preview").contentWindow.document;
+            previewFrame.open();
+            previewFrame.write(html + css + js);
+            previewFrame.close();
+        }
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
